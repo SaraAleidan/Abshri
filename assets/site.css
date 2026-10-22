@@ -1,0 +1,34 @@
+/* Standalone-site additions on top of styles.css (which is unchanged from the original design). */
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+h1 { font-family: var(--f-display); font-weight: 700; line-height: 1.3; text-wrap: balance; margin: 0; font-size: 1.55rem; }
+.h3 { font-size: 1.12rem; }
+.brand { align-items: center; }
+.brand img { width: 30px; height: 30px; flex: none; }
+.skip { position: absolute; inset-inline-start: 12px; top: -60px; z-index: 20; background: var(--accent); color: var(--accent-ink); padding: 8px 14px; border-radius: 8px; font-weight: 700; }
+.skip:focus { top: calc(env(safe-area-inset-top, 0px) + 8px); }
+.stack-4 { display: grid; gap: 4px; }
+.stack-6 { display: grid; gap: 6px; }
+.under { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; min-height: 1.4em; }
+.under .err { flex: 1 1 auto; }
+.under .counter { flex: none; }
+/* Status line sits in normal flow under the buttons: it can never cover a control. */
+.status { min-height: 1.5em; font-size: .9rem; color: var(--muted); margin: 0; }
+.status.bad { color: var(--bad); font-weight: 600; }
+.status.good { color: var(--good); font-weight: 600; }
+.reading { top: calc(env(safe-area-inset-top, 0px) + 84px); }
+#list-anchor, .view { scroll-margin-top: calc(env(safe-area-inset-top, 0px) + 84px); }
+.tools { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.tools .btn { padding: 8px 14px; font-size: .9rem; }
+.tools .status { flex-basis: 100%; }
+.confirm { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; padding: 10px 14px; border-radius: 10px; background: var(--bad-soft); }
+.btn.danger { background: var(--bad); color: #fff; }
+.login { display: grid; gap: 12px; max-width: 420px; }
+.tag { font-size: .75rem; font-weight: 600; padding: 1px 8px; border-radius: 999px; background: var(--saffron-soft); color: var(--saffron); }
+.tag.sent { background: var(--accent-soft); color: var(--accent); }
+input[type=email], input[type=password] { width: 100%; font: inherit; color: var(--ink); background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+@media (max-width: 900px) { .reading { position: static; } }
+button.chip { font: inherit; font-size: .9rem; color: var(--ink); cursor: pointer; }
+button.chip:hover { border-color: var(--accent); }

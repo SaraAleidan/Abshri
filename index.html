@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>أبشري</title>
+<meta name="description" content="أبشري: منصة عربية لتحليل شكاوى الطالبات واكتشاف المشكلات المتكررة بمعالجة اللغة الطبيعية.">
+<meta name="theme-color" content="#0b6e74">
+<meta property="og:title" content="أبشري">
+<meta property="og:description" content="منصة عربية لتحليل شكاوى الطالبات واكتشاف المشكلات المتكررة.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Reem+Kufi:wght@500;700&display=swap">
+<link rel="stylesheet" href="assets/styles.css">
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+<a class="skip" href="#main">تخطَّ إلى المحتوى</a>
+<header class="top">
+  <div class="wrap bar">
+    <a class="brand" href="#submit"><img src="favicon.svg" alt="" width="30" height="30"><b>أبشري</b><span>صوت الطالبات، مرتّباً</span></a>
+    <nav class="tabs" aria-label="الأقسام">
+      <a href="#submit" data-view="submit">تقديم شكوى</a>
+      <a href="#admin" data-view="admin">لوحة التحليل</a>
+      <a href="#method" data-view="method">كيف يعمل التحليل</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap" id="main">
+  <!-- ============ SUBMIT ============ -->
+  <section class="view" id="view-submit" aria-labelledby="h-submit">
+    <div class="lede">
+      <h1 id="h-submit">اكتبي شكواك بكلماتك</h1>
+      <p>بالفصحى أو بالعامية، كما تكتبينها لصديقتك. أبشري تقرأ النص وتصنّفه تلقائياً، ثم تجمع الشكاوى المتشابهة لتعرف الإدارة أين تتكرر المشكلات.</p>
+    </div>
+    <div id="mode-note"></div>
+
+    <div class="submit-grid">
+      <form class="panel" id="form" novalidate>
+        <div class="row2">
+          <div class="field">
+            <label for="college">الكلية</label>
+            <select id="college" required aria-describedby="college-err">
+              <option value="">اختاري الكلية</option>
+            </select>
+            <span class="err" id="college-err" hidden></span>
+          </div>
+          <div class="field">
+            <label for="stcat">تصنيفك للشكوى <span class="hint">(اختياري)</span></label>
+            <select id="stcat"><option value="">لا أعرف، دعي أبشري تصنّف</option></select>
+          </div>
+        </div>
+        <div class="field">
+          <label for="title">عنوان مختصر</label>
+          <input type="text" id="title" maxlength="80" placeholder="مثال: الواي فاي في المكتبة" aria-describedby="title-err" autocomplete="off">
+          <span class="err" id="title-err" hidden></span>
+        </div>
+        <div class="field">
+          <label for="text">تفاصيل الشكوى</label>
+          <textarea id="text" maxlength="800" placeholder="اكتبي ما حدث، وأين، ومنذ متى إن أمكن." aria-describedby="text-err text-count"></textarea>
+          <div class="under">
+            <span class="err" id="text-err" hidden></span>
+            <span class="counter num" id="text-count">0 / 600</span>
+          </div>
+        </div>
+        <p class="hint" id="privacy-note"></p>
+        <div class="actions">
+          <button class="btn" type="submit" id="send">إرسال الشكوى</button>
+          <button class="btn ghost" type="button" id="try-sample">جرّبي بمثال</button>
+        </div>
+        <p class="status" id="send-state" role="status" aria-live="polite"></p>
+      </form>
+
+      <aside class="panel reading" aria-labelledby="h-reading">
+        <div class="stack-4">
+          <h2 class="h3" id="h-reading">كيف تقرأ أبشري نصّك</h2>
+          <p class="hint">يتحدّث أثناء الكتابة. هذا التحليل نفسه هو ما تعرضه لوحة التحليل.</p>
+        </div>
+        <div class="cat"><span class="eyebrow">التصنيف المتوقع</span><span id="r-cat" class="pill other">بانتظار النص</span></div>
+        <div class="stack-6"><span class="eyebrow">١. النص بعد التوحيد</span><div class="mono" id="r-norm">—</div></div>
+        <div class="stack-6"><span class="eyebrow">٢. الكلمات المفتاحية (الملوّنة أثّرت في التصنيف)</span><div class="tokens" id="r-tokens"><span class="hint">—</span></div></div>
+        <div class="stack-6"><span class="eyebrow">٣. درجات الفئات</span><div class="scorebars" id="r-scores"></div></div>
+      </aside>
+    </div>
+
+    <div id="done" hidden></div>
+    <section class="mine" id="mine" hidden aria-labelledby="h-mine">
+      <h2 class="h3" id="h-mine">شكاواي المرسلة من هذا الجهاز</h2>
+      <div id="mine-list" class="mine"></div>
+    </section>
+  </section>
+
+  <!-- ============ ADMIN / ANALYSIS ============ -->
+  <section class="view" id="view-admin" aria-labelledby="h-admin" hidden>
+    <div class="toolbar">
+      <div class="lede">
+        <h1 id="h-admin">لوحة التحليل</h1>
+        <p>كل رقم هنا محسوب الآن من الشكاوى نفسها بخطوات التحليل الموضّحة في «كيف يعمل التحليل».</p>
+      </div>
+      <div class="seg" role="group" aria-label="مصدر البيانات">
+        <button type="button" data-src="all" aria-pressed="true">الكل</button>
+        <button type="button" data-src="sent" aria-pressed="false">الشكاوى المرسلة</button>
+        <button type="button" data-src="demo" aria-pressed="false">البيانات التجريبية</button>
+      </div>
+    </div>
+    <div id="admin-note"></div>
+    <div id="admin-tools"></div>
+    <div id="admin-body"></div>
+  </section>
+
+  <!-- ============ METHOD ============ -->
+  <section class="view" id="view-method" aria-labelledby="h-method" hidden>
+    <div class="lede">
+      <h1 id="h-method">كيف يعمل التحليل</h1>
+      <p>خمس خطوات تعمل داخل متصفحك مباشرة، دون إرسال النص لأي خدمة خارجية. وهي نسخة سطراً بسطر من دفتر Colab الخاص بالمشروع، وشُغّلت النسختان على ٦٩ نصاً فأعطتا النتيجة نفسها حرفياً.</p>
+    </div>
+    <div class="pipeline">
+      <div class="stage"><b>التوحيد</b><small>إزالة التشكيل والتطويل، توحيد أ/إ/آ، ة→ه، ى→ي، الأرقام الهندية، اختصار الحروف المكررة «خربااان».</small></div>
+      <div class="stage"><b>التقطيع</b><small>تقسيم النص إلى كلمات وحذف الرموز والإيموجي.</small></div>
+      <div class="stage"><b>تجذيع خفيف</b><small>نزع «ال، وال، بال، لل…» من أول الكلمة فقط، دون اشتقاق جذري يخلط المعاني.</small></div>
+      <div class="stage"><b>التصنيف</b><small>معجم لثماني فئات: كلمة قوية = ٢ نقطة، ضعيفة = ١. الأعلى يفوز، والصفر = «غير مصنّفة».</small></div>
+      <div class="stage"><b>التجميع</b><small>تكرار الكلمات والعبارات، التوزيع حسب الكلية، وأوضح مثال لكل فئة.</small></div>
+    </div>
+
+    <div class="grid2">
+      <div class="card">
+        <header><h2 class="h3">التقييم</h2><span class="eyebrow">٦٠ شكوى مصنّفة يدوياً، محسوب الآن</span></header>
+        <div class="evalrow" id="eval-kpis"></div>
+        <p class="hint">البيانات: ١١ شكوى من النسخة الأولى للمشروع و٤٩ شكوى كُتبت للاختبار، وليست شكاوى طالبات حقيقية؛ لذا الأرقام تقدير متفائل. نموذج تعلّم آلي (TF-IDF مع انحدار لوجستي، تحقق متقاطع بخمسة أجزاء) حصل على دقة ٤٣٫٣٪ فقط على البيانات نفسها لقلّتها.</p>
+        <div class="tablewrap"><table id="eval-table"></table></div>
+      </div>
+      <div class="card">
+        <header><h2 class="h3">حدود أبشري</h2></header>
+        <div class="prose">
+          <ul>
+            <li>لا تحلل المشاعر: كل الشكاوى سلبية بطبيعتها، ولم يُتحقق من أي نموذج مشاعر عربي على هذه البيانات.</li>
+            <li>تعطي فئة واحدة لكل شكوى؛ الشكوى ذات الموضوعين تأخذ الأعلى درجة.</li>
+            <li>الكلمات خارج المعجم تجعل الشكوى «غير مصنّفة» بدل تخمين خاطئ، وتظهر في اللوحة لتُراجع.</li>
+            <li>التجذيع يعالج البادئات فقط، لا اللواحق ولا جموع التكسير.</li>
+            <li>دفتر Colab يضيف تجميعاً دلالياً بنموذج MiniLM متعدد اللغات، وهو غير مشغّل في الموقع.</li>
+          </ul>
+          <p class="hint" id="storage-explain"></p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="wrap foot">
+  أبشري — مشروع ختامي لبرنامج <span class="en">NLP From Zero</span>، <span class="en">Google Developer Groups on Campus</span> بجامعة الأميرة نورة بنت عبدالرحمن. مشروع طلابي، وليس قناة رسمية لاستقبال الشكاوى في الجامعة.
+</footer>
+
+<script src="config.js"></script>
+<script src="assets/abshri-nlp.js"></script>
+<script src="assets/demo-data.js"></script>
+<script src="assets/storage.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>
